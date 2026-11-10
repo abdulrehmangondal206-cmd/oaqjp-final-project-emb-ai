@@ -1,4 +1,5 @@
 """Emotion detection using the Watson NLP library."""
+import json
 import requests
 
 URL = ("https://sn-watson-emotion.labs.skills.network/v1/"
@@ -7,7 +8,20 @@ HEADERS = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_sto
 
 
 def emotion_detector(text_to_analyze):
-    """Send text to Watson and return the raw response text."""
+    """Return emotion scores and the dominant emotion for the given text."""
     payload = {"raw_document": {"text": text_to_analyze}}
     response = requests.post(URL, json=payload, headers=HEADERS, timeout=10)
-    return response.text
+
+    data = json.loads(response.text)
+    emotions = data["emotionPredictions"][0]["emotion"]
+
+    scores = {
+        "anger": emotions["anger"],
+        "disgust": emotions["disgust"],
+        "fear": emotions["fear"],
+        "joy": emotions["joy"],
+        "sadness": emotions["sadness"],
+    }
+    scores["dominant_emotion"] = max(scores, key=scores.get)
+    return scores
+
