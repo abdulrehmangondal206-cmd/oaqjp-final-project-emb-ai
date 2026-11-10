@@ -1,15 +1,35 @@
-"""Basic test for the emotion detection application."""
+"""Unit tests for the emotion detection application."""
 import unittest
-from emotion_detection import emotion_detector
+from EmotionDetection.emotion_detection import emotion_detector
 
 
 class TestEmotionDetector(unittest.TestCase):
-    """Basic tests for emotion_detector."""
+    """Tests for emotion_detector."""
 
-    def test_response_contains_emotions(self):
-        """The Watson response should contain emotion predictions."""
+    def test_joy(self):
+        """Joy statement returns joy as dominant emotion."""
+        result = emotion_detector("I am glad this happened")
+        self.assertEqual(result["dominant_emotion"], "joy")
+
+    def test_anger(self):
+        """Anger statement returns anger as dominant emotion."""
         result = emotion_detector("I am really mad about this")
-        self.assertIn("emotionPredictions", result)
+        self.assertEqual(result["dominant_emotion"], "anger")
+
+    def test_disgust(self):
+        """Disgust statement returns disgust as dominant emotion."""
+        result = emotion_detector("I feel disgusted just hearing about this")
+        self.assertEqual(result["dominant_emotion"], "disgust")
+
+    def test_sadness(self):
+        """Sadness statement returns sadness as dominant emotion."""
+        result = emotion_detector("I am so sad about this")
+        self.assertEqual(result["dominant_emotion"], "sadness")
+
+    def test_fear(self):
+        """Fear statement returns fear as dominant emotion."""
+        result = emotion_detector("I am really afraid that this will happen")
+        self.assertEqual(result["dominant_emotion"], "fear")
 
 
 if __name__ == "__main__":
